@@ -22,11 +22,15 @@ type SelectedDoctor = Doctor | null;
 
 // --- 2. API CONSTANTS ---
 const DOCTOR_LIST_API_URL = 'https://node-backend-tau-three.vercel.app/api/auth/availableDoctors';
-const BOOKING_API_BASE_URL = 'https://node-backend-tau-three.vercel.app/api/auth/appointmentrequest';
+const BOOKING_API_BASE_URL = 'https://node-backend-tau-three.vercel.app/api/auth/appointmentrequest?doctorId=68f77624c808435a187d5ce2';
+
+// --- CONSTANTS FOR PAYLOAD MAPPING ---
+const APPOINTMENT_FROM_TIME = "9:00 AM"; 
+const APPOINTMENT_TO_TIME = "10:00 AM"; 
 
 
 // --------------------------------------------------------------------------------
-// --- 3. BOOKING MODAL COMPONENT (FINAL PAYLOAD KEYS CORRECTED) ---
+// --- 3. BOOKING MODAL COMPONENT (Only Required Payload Keys Displayed) ---
 // --------------------------------------------------------------------------------
 
 interface BookingModalProps {
@@ -35,12 +39,10 @@ interface BookingModalProps {
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
-  // State holds user-friendly fields for display and selection
+  // State holds fields for form input (Patient Name input kept for basic validation)
   const [formData, setFormData] = useState({
-    doctorName: `Dr. ${doctor.name}`, 
-    patientNameInput: '', // Input field for patient name
-    selectedDay: '', // Selected day from dropdown
-    selectedTime: '9:00 AM', // Fixed time slot for display
+    patientNameInput: '', // Input for the user's name
+    days: '', // Selected day (maps to 'days' in payload)
   });
   
   const [bookingStatus, setBookingStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -57,7 +59,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.patientNameInput || !formData.selectedDay) {
+    // Simple client-side validation
+    if (!formData.patientNameInput || !formData.days) {
         setResponseMessage('Please fill in your name and select an appointment day.');
         return;
     }
@@ -66,33 +69,34 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
     setResponseMessage('Sending request...');
 
     // 1. Construct the API URL with the doctor's ID as a query parameter
-    const API_ENDPOINT = `${BOOKING_API_BASE_URL}?doctorId=${doctor._id}`;
+    const API_ENDPOINT = `${BOOKING_API_BASE_URL}`
 
-    // 2. Construct the FINAL payload (request body) with ONLY the required keys: "from", "to", and "days"
-    // The fixed time "9:00 AM" and an assumed end time are used for the 'from' and 'to' fields.
+    // 2. Construct the FINAL payload (request body) with ONLY the three keys requested: "from", "to", and "days"
     const payload = {
-        "from": "9:00 AM",
-        "to": "10:00 AM", 
-        "days": formData.selectedDay,
-        
-        // Note: PatientName and DoctorId are often required by a real API, 
-        // but based on your specific request for ONLY "from", "to", "days", 
-        // we are keeping only those. If the API rejects this sparse payload, 
-        // you will need to re-add fields like patientName and doctorId to the payload.
+        "from": APPOINTMENT_FROM_TIME, 
+        "to": APPOINTMENT_TO_TIME, 
+        "days": formData.days,
     };
     
-    console.log("Sending Payload:", payload, "to URL:", API_ENDPOINT);
+    // Note: The patientNameInput is used for validation but NOT included in this payload 
+    // as per your strict instructions to only include "from", "to", "days".
 
     try {
+        const token = localStorage.getItem("token");
         // 3. Send the POST request
-        const res = await axios.post(API_ENDPOINT, payload);
+        const res = await axios.post(API_ENDPOINT, payload, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, // ✅ add token here
+    },
+  });
         
-        console.log("Appointment Success:", res.data);
+        console.log("Appointment Success:", res);
         setBookingStatus('success');
-        setResponseMessage(`Appointment booked successfully! Confirmation sent to your email.`);
+        setResponseMessage(`Appointment booked successfully! Confirmation sent.`);
 
     } catch (error: any) { 
-        // Safely handle error response (Addresses image_273e42.png)
+        // Safely handle error response
         const errorMsg = error.response?.data?.message || error.message || 'Failed to connect to booking service.';
         console.error("Appointment Error:", error.response?.data || error.message);
         setBookingStatus('error');
@@ -101,7 +105,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
   };
 
   const handleDaySelect = (day: string) => {
-    setFormData(prev => ({ ...prev, selectedDay: day }));
+    setFormData(prev => ({ ...prev, days: day }));
     setIsDaysDropdownOpen(false);
   };
   
@@ -123,22 +127,12 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
           &times; 
         </button>
 
-        <h2>Book Appointment with {formData.doctorName}</h2>
-        <p>Specialty: {doctor.service}</p>
+        <h2>Book Appointment</h2> 
 
         <form onSubmit={handleSubmit} className={styles.bookingForm}>
-          {/* Doctor Field (Read-only) */}
-          <label htmlFor="doctorName">Doctor:</label>
-          <input
-            id="doctorName"
-            type="text"
-            value={formData.doctorName}
-            readOnly
-            className={styles.readOnlyInput}
-          />
-
-          {/* Patient Name (User Input) - Still needed for validation */}
-          <label htmlFor="patientNameInput">Your Name:</label>
+          
+          {/* Patient Name Input (labeled 'from') */}
+          <label htmlFor="patientNameInput">from:</label>
           <input
             id="patientNameInput"
             type="text"
@@ -148,16 +142,16 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             onChange={(e) => setFormData(prev => ({ ...prev, patientNameInput: e.target.value }))}
           />
 
-          {/* Days Field (Dropdown) -> Mapped to 'days' in payload */}
-          <label htmlFor="selectedDay">Appointment Day:</label>
+          {/* Appointment Day (labeled 'days') */}
+          <label htmlFor="days">days:</label>
           <div className={styles.daysDropdownContainer}>
             <input
-              id="selectedDay"
+              id="days"
               type="text"
               required
               readOnly
               placeholder="Select an available day"
-              value={formData.selectedDay}
+              value={formData.days}
               onClick={() => setIsDaysDropdownOpen(prev => !prev)}
               className={styles.dropdownInput}
             />
@@ -180,13 +174,13 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             )}
           </div>
           
-          {/* Appointment Time Input (Fixed) -> Mapped to 'from' and 'to' in payload */}
-          <label htmlFor="selectedTime">Appointment Time:</label>
+          {/* Appointment Time (labeled 'to') */}
+          <label htmlFor="timeDisplay">to:</label>
           <input
-            id="selectedTime"
+            id="timeDisplay"
             type="text"
             readOnly
-            value={formData.selectedTime}
+            value={APPOINTMENT_TO_TIME} 
             className={styles.readOnlyInput}
           />
 
@@ -196,6 +190,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             disabled={bookingStatus === 'loading'}
           >
             {bookingStatus === 'loading' ? 'Booking...' : 'Confirm Booking'}
+        
           </button>
         </form>
         
@@ -215,7 +210,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
 
 
 // --------------------------------------------------------------------------------
-// --- 4. DOCTOR CARD COMPONENT (UNCHANGED) ---
+// --- 4. DOCTOR CARD COMPONENT & 5. MAIN LISTING PAGE COMPONENT (UNCHANGED) ---
 // --------------------------------------------------------------------------------
 
 interface DoctorCardProps {
@@ -279,10 +274,6 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onBook }) => {
 };
 
 
-// --------------------------------------------------------------------------------
-// --- 5. MAIN LISTING PAGE COMPONENT ---
-// --------------------------------------------------------------------------------
-
 const DoctorListingPage: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -310,7 +301,6 @@ const DoctorListingPage: React.FC = () => {
 
         const rawData = await response.json();
         
-        // Handle non-array data structure (Addresses image_27a779.png)
         let doctorsArray: any[] = [];
         
         if (Array.isArray(rawData)) {
