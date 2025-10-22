@@ -1,0 +1,136 @@
+/* Fullscreen dark overlay */
+.doctor-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Popup form container */
+.doctor-popup {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 18px;
+  width: 430px;
+  max-width: 95%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.35s ease-in-out;
+}
+
+/* Heading */
+.doctor-heading {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Form fields */
+.doctor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.doctor-input,
+.doctor-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.doctor-input:focus,
+.doctor-select:focus {
+  border-color: #4b7bec;
+  box-shadow: 0 0 5px rgba(75, 123, 236, 0.3);
+}
+
+/* Label and checkbox */
+.doctor-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* Availability section */
+.availability-box {
+  background: #f7f9fc;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #e1e5ee;
+}
+
+.availability-box h4 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.time-inputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Submit button */
+.doctor-button {
+  background: linear-gradient(135deg, #4b7bec, #3867d6);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.doctor-button:hover {
+  background: linear-gradient(135deg, #3867d6, #4b7bec);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(56, 103, 214, 0.3);
+}
+
+/* Message */
+p {
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 1rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(5px);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(80px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

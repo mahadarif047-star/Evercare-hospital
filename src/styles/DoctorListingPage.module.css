@@ -1,0 +1,221 @@
+/* src/styles/DoctorListingPage.module.css */
+
+.pageContainer {
+    max-width: 1200px; /* Slightly reduced for better fit */
+    margin: 20px auto; /* Add some top/bottom margin */
+    padding: 0 20px;
+}
+
+.searchBar {
+    display: flex;
+    justify-content: space-between; /* Space between filters and search */
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee; /* Add a subtle separator */
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    padding: 8px 20px; /* Increased padding */
+    background-color: var(--white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* More prominent shadow */
+    width: 350px; /* Fixed width for search input area */
+}
+
+.searchBox input {
+    border: none;
+    outline: none;
+    padding: 0 10px; /* Adjusted padding */
+    font-size: 1rem;
+    flex-grow: 1;
+    color: var(--text-dark);
+}
+
+.searchBox input::placeholder {
+    color: #999;
+}
+
+.searchIcon {
+    cursor: pointer;
+    font-size: 1.2rem; /* Larger icon */
+    color: #555;
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    padding: 8px 20px; /* Consistent padding */
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    background-color: var(--white);
+    color: #555;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Consistent shadow */
+    transition: all 0.2s ease-in-out;
+}
+
+.filters:hover {
+    background-color: #f8f8f8;
+    border-color: var(--primary-blue);
+}
+
+.filterIcon {
+    font-size: 1.1rem;
+    color: #777;
+}
+
+.errorMessage {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 15px;
+    border: 1px solid #ffeeba;
+    border-radius: 8px; /* Slightly more rounded */
+    margin-bottom: 25px; /* More space */
+    text-align: center;
+    font-size: 1rem;
+}
+
+.doctorList {
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Increased gap between cards */
+}
+
+/* --- Modal Overlay (The dimmed background) --- */
+.modalOverlay {
+    position: fixed; /* Fixed position relative to the viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+    display: flex; /* Centers the modal content */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it is on top of all other page content */
+    padding: 20px;
+}
+
+/* --- Modal Content (The actual form container) --- */
+.modalContent {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    max-height: 90vh; /* Prevents modal from getting too tall on small screens */
+    overflow-y: auto; /* Allows scrolling if content overflows */
+}
+
+/* --- Close Button --- */
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    line-height: 1;
+}
+
+/* --- Form and Input Styling --- */
+.bookingForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.bookingForm label {
+    font-weight: bold;
+    color: #555;
+}
+
+.bookingForm input,
+.dropdownInput {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.readOnlyInput {
+    background-color: #f0f0f0;
+    color: #666;
+    cursor: default;
+}
+
+.daysDropdownContainer {
+    position: relative;
+}
+
+.daysDropdown {
+    position: absolute;
+    top: 100%; /* Position right below the input */
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    z-index: 1010; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.dayOption {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.dayOption:hover {
+    background-color: #f5f5f5;
+}
+
+.submitButton {
+    background-color: #007bff; 
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background-color 0.2s;
+}
+
+.submitButton:hover {
+    background-color: #0056b3;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .searchBar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    .searchBox, .filters {
+        width: 100%;
+        justify-content: center;
+    }
+    .searchBox input {
+        min-width: unset;
+    }
+}

@@ -1,0 +1,142 @@
+.heroSection {
+  background-color: var(--primary-blue);
+  color: var(--white);
+  overflow: hidden;
+  padding-top: 50px;
+  position: relative; /* Added for image positioning */
+}
+
+.contentContainer {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 120px; /* More space for the image to overlap */
+  position: relative;
+  z-index: 1; /* Ensure content is above any background elements */
+}
+
+.textContent {
+  width: 50%;
+  padding-right: 40px;
+  z-index: 1;
+}
+
+.mainHeading {
+  font-size: 3.5rem; /* Large and impactful */
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.subText {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85); /* Slightly brighter text */
+  line-height: 1.6;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 15px;
+  margin-top: 40px; /* More spacing */
+}
+
+.appointmentButton {
+  padding: 14px 28px; /* Slightly larger buttons */
+  background-color: var(--white);
+  color: var(--primary-blue);
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* More pronounced shadow */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.appointmentButton:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px); /* Subtle hover effect */
+}
+
+.callButton {
+  padding: 14px 28px;
+  background-color: transparent;
+  color: var(--white);
+  font-weight: bold;
+  border: 2px solid var(--white);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.callButton:hover {
+  background-color: var(--white);
+  color: var(--primary-blue);
+  transform: translateY(-2px);
+}
+
+.imageWrapper { /* New wrapper for controlling image placement */
+  position: absolute; /* Position relative to .heroSection */
+  bottom: 0;
+  right: 0;
+  width: 55%; /* Adjust width to fit the design */
+  max-width: 700px; /* Prevent image from becoming too large */
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end; /* Align image to the bottom */
+  pointer-events: none; /* Allows clicks to pass through to content behind it */
+}
+
+.doctorImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Ensure the entire image is visible */
+  position: relative;
+  bottom: -40px; /* Adjust this to control how much it overlaps the bottom */
+  right: -20px; /* Adjust to move it slightly out of bounds on the right */
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .mainHeading { font-size: 3rem; }
+  .doctorImage { max-width: 450px; bottom: -20px; }
+  .imageWrapper { width: 50%; }
+}
+
+@media (max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+    text-align: center;
+    padding-bottom: 50px;
+  }
+  .textContent {
+    width: 100%;
+    padding-right: 0;
+    margin-bottom: 30px;
+  }
+  .mainHeading { font-size: 2.5rem; }
+  .buttonGroup { justify-content: center; }
+  .imageWrapper {
+    position: static; /* Remove absolute positioning on small screens */
+    width: 100%;
+    max-width: 400px; /* Constrain image size */
+    margin: 0 auto;
+    bottom: 0;
+    right: 0;
+    display: block;
+    pointer-events: auto;
+  }
+  .doctorImage {
+    position: static;
+    bottom: 0;
+    right: 0;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+}

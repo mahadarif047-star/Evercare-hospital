@@ -1,0 +1,147 @@
+.footer {
+  background-color: var(--bg-dark);
+  color: var(--text-gray);
+  margin-top: auto;
+  padding-top: 60px; /* More padding */
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px 40px; /* Adjust padding */
+  display: grid;
+  grid-template-columns: 1.5fr repeat(3, 1fr); /* First column wider */
+  gap: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
+}
+
+.footerColumn {
+  padding: 10px 0;
+}
+
+.logo {
+  font-size: 2rem; /* Larger logo */
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: var(--white);
+}
+
+.logoSpan {
+  color: var(--primary-blue);
+}
+
+.motto {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 25px;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.socialLink {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 1.3rem; /* Larger icons */
+  transition: color 0.3s ease;
+}
+
+.socialLink:hover {
+  color: var(--primary-blue);
+}
+
+/* Icons within social links and contact info */
+.socialLink i, .contactInfo i {
+  margin-right: 8px;
+}
+
+.heading {
+  font-size: 1.2rem; /* Larger heading */
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.heading::after { /* Underline effect */
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 50px; /* Short underline */
+  height: 2px;
+  background-color: var(--primary-blue);
+}
+
+.linkList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.link {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: var(--primary-blue);
+}
+
+.contactInfo {
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: flex-start; /* Align icon and text nicely */
+}
+
+.bottomBar {
+  padding: 20px 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.bottomBarContent {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1.2fr repeat(3, 1fr);
+  }
+  .logo { font-size: 1.6rem; }
+  .heading { font-size: 1.1rem; }
+}
+
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 30px;
+  }
+  .footerColumn:nth-child(1) { /* Full width for logo on small screens */
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+  .heading::after { left: 50%; transform: translateX(-50%); } /* Center underline */
+  .socialIcons { justify-content: center; }
+}
+@media (max-width: 480px) {
+  .container {
+    grid-template-columns: 1fr; /* Single column */
+    gap: 20px;
+    text-align: center;
+  }
+  .heading::after { left: 50%; transform: translateX(-50%); }
+}

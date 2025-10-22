@@ -1,0 +1,33 @@
+.navbar {
+  background-color: var(--white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.container {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; height: 64px;
+}
+.logo { font-size: 1.5rem; font-weight: bold; color: var(--text-dark); }
+.logo span { color: var(--primary-blue); }
+.navLinks { display: flex; gap: 32px; }
+.navLink { color: #666; text-decoration: none; padding: 8px 0; font-weight: 500; transition: color 0.3s; }
+.navLink:hover { color: var(--primary-blue); }
+.authContainer { display: flex; align-items: center; gap: 16px; position: relative; }
+.loginButton {
+  padding: 8px 16px; color: var(--primary-blue); background-color: transparent;
+  border: 2px solid var(--primary-blue); border-radius: 8px; cursor: pointer; font-weight: 600; transition: background-color 0.3s;
+}
+.loginButton:hover { background-color: #f0f4ff; }
+.signUpButton {
+  padding: 10px 18px; background-color: var(--primary-blue); color: var(--white);
+  border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: background-color 0.3s;
+}
+.signUpButton:hover { background-color: var(--light-blue); }
+.roleDropdown {
+  position: absolute; top: 100%; right: 0; margin-top: 8px; width: 150px;
+  background-color: var(--white); border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10; overflow: hidden;
+}
+.roleButton {
+  width: 100%; padding: 10px 15px; text-align: left; background: none;
+  border: none; color: var(--text-dark); cursor: pointer; transition: background-color 0.2s;
+}
+.roleButton:hover { background-color: #f4f4f4; }

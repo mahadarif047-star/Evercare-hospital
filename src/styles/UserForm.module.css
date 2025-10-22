@@ -1,0 +1,118 @@
+.formOverlay {
+  position: fixed; /* Fixed position to cover the entire viewport */
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* High z-index to appear above everything else */
+  backdrop-filter: blur(5px); /* Optional: Adds a blur effect */
+}
+
+.formCard {
+  padding: 30px;
+  background-color: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+  max-width: 600px;
+  width: 90%; /* Make it responsive */
+  position: relative; /* Needed for positioning the close button */
+  transform: translateY(0); /* Start animation from here */
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+/* Keyframe animation for slide down effect */
+@keyframes slideDown {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.closeButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2rem; /* Larger cross icon */
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+  color: var(--text-dark); /* Darker on hover */
+}
+
+.formTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--primary-blue);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+
+.input, .select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input:focus, .select:focus {
+  border-color: var(--primary-blue);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 71, 179, 0.2);
+}
+
+.submitButton {
+  grid-column: 1 / -1;
+  margin-top: 20px;
+  padding: 12px;
+  background-color: var(--primary-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+  background-color: var(--light-blue);
+}
+
+/* Responsive adjustments for forms */
+@media (max-width: 600px) {
+  .formGrid {
+    grid-template-columns: 1fr; /* Stack columns on small screens */
+  }
+  .formCard {
+    width: 95%; /* Adjust width for very small screens */
+    margin: 20px;
+  }
+}
