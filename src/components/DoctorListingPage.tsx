@@ -38,9 +38,9 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
   // State holds user-friendly fields for display and selection
   const [formData, setFormData] = useState({
     doctorName: `Dr. ${doctor.name}`, 
-    patientName: '', // Maps to 'patientName' in payload 
-    selectedDay: '', // Maps to 'days' in payload
-    selectedTime: '9:00 AM', // Used as the fixed time slot 
+    patientNameInput: '', // Input field for patient name
+    selectedDay: '', // Selected day from dropdown
+    selectedTime: '9:00 AM', // Fixed time slot for display
   });
   
   const [bookingStatus, setBookingStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -57,7 +57,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.patientName || !formData.selectedDay) {
+    if (!formData.patientNameInput || !formData.selectedDay) {
         setResponseMessage('Please fill in your name and select an appointment day.');
         return;
     }
@@ -68,18 +68,21 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
     // 1. Construct the API URL with the doctor's ID as a query parameter
     const API_ENDPOINT = `${BOOKING_API_BASE_URL}?doctorId=${doctor._id}`;
 
-    // 2. Construct the FINAL payload (request body) with the EXACT keys requested: "from", "to", and "days"
+    // 2. Construct the FINAL payload (request body) with ONLY the required keys: "from", "to", and "days"
+    // The fixed time "9:00 AM" and an assumed end time are used for the 'from' and 'to' fields.
     const payload = {
-        patientName: formData.patientName,
-        patientEmail: 'patient@example.com', // Placeholder for logged-in user email
-        doctorId: doctor._id, 
+        "from": "9:00 AM",
+        "to": "10:00 AM", 
+        "days": formData.selectedDay,
         
-        // --- Keys expected by the API endpoint ---
-        "from": "9:00 AM", // Using the fixed time for both 'from' and 'to' as per the form image
-        "to": "10:00 AM", // Note: The form only shows '9:00 AM', setting a simple range here
-        "days": formData.selectedDay, // The selected day
+        // Note: PatientName and DoctorId are often required by a real API, 
+        // but based on your specific request for ONLY "from", "to", "days", 
+        // we are keeping only those. If the API rejects this sparse payload, 
+        // you will need to re-add fields like patientName and doctorId to the payload.
     };
     
+    console.log("Sending Payload:", payload, "to URL:", API_ENDPOINT);
+
     try {
         // 3. Send the POST request
         const res = await axios.post(API_ENDPOINT, payload);
@@ -134,18 +137,18 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             className={styles.readOnlyInput}
           />
 
-          {/* Patient Name (User Input) */}
-          <label htmlFor="patientName">Your Name:</label>
+          {/* Patient Name (User Input) - Still needed for validation */}
+          <label htmlFor="patientNameInput">Your Name:</label>
           <input
-            id="patientName"
+            id="patientNameInput"
             type="text"
             required
             placeholder="Enter your full name"
-            value={formData.patientName}
-            onChange={(e) => setFormData(prev => ({ ...prev, patientName: e.target.value }))}
+            value={formData.patientNameInput}
+            onChange={(e) => setFormData(prev => ({ ...prev, patientNameInput: e.target.value }))}
           />
 
-          {/* Days Field (Dropdown) */}
+          {/* Days Field (Dropdown) -> Mapped to 'days' in payload */}
           <label htmlFor="selectedDay">Appointment Day:</label>
           <div className={styles.daysDropdownContainer}>
             <input
@@ -177,7 +180,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             )}
           </div>
           
-          {/* Appointment Time Input (Fixed for this version) */}
+          {/* Appointment Time Input (Fixed) -> Mapped to 'from' and 'to' in payload */}
           <label htmlFor="selectedTime">Appointment Time:</label>
           <input
             id="selectedTime"
