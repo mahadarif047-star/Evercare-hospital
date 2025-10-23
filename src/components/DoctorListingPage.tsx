@@ -84,11 +84,9 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
     console.log("Payload sent:", payload);
 
     try {
-        // Using token in header (standard practice) AND in payload (as requested)
         const res = await axios.post(API_ENDPOINT, payload, {
             headers: {
                 "Content-Type": "application/json",
-                // Using the retrieved token here
                 Authorization: `Bearer ${token}`, 
             },
         });
@@ -97,7 +95,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
         setBookingStatus('success');
         setResponseMessage(`Appointment booked successfully! Confirmation sent.`);
 
-    // FIX: Explicitly check for Axios error structure to resolve squiggly lines
     } catch (error) { 
         const err = error as { response?: { data?: { message?: string } }, message: string };
         const errorMsg = err.response?.data?.message || err.message || 'Failed to connect to booking service.';
@@ -180,7 +177,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', width: '100%', cursor: 'pointer' }}
             />
             {isDaysDropdownOpen && (
-              <div style={{ border: '1px solid #ccc', maxHeight: '150px', overflowY: 'auto', position: 'absolute', width: '90%', backgroundColor: 'white', zIndex: 1001, boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
+              <div style={{ border: '1px solid #ccc', maxHeight: '150px', overflowY: 'auto', position:  'absolute', width: '90%', backgroundColor: 'white', zIndex: 1001, boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
                 {availableDays.length > 0 ? (
                   availableDays.map(day => (
                     <div
@@ -198,7 +195,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             )}
           </div>
           
-          {/* Appointment Time (Read-only) - Matches image_25d520.png */}
           <label htmlFor="timeDisplay" style={{ fontWeight: 'bold', marginBottom: '-10px' }}>Appointment Time:</label>
           <input
             id="timeDisplay"
@@ -231,9 +227,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
 };
 
 
-// --------------------------------------------------------------------------------
-// --- 4. DOCTOR CARD COMPONENT (No changes needed) ---
-// --------------------------------------------------------------------------------
+
 
 interface DoctorCardProps {
   doctor: Doctor;
@@ -320,9 +314,6 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onBook }) => {
 };
 
 
-// --------------------------------------------------------------------------------
-// --- 5. MAIN LISTING PAGE COMPONENT (Fixes API data array check) ---
-// --------------------------------------------------------------------------------
 
 const DoctorListingPage: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -361,11 +352,9 @@ const DoctorListingPage: React.FC = () => {
         
         let doctorsArray: any[] = [];
         
-        // 🔄 FIX: Prioritize checking for the 'doctors' array first (as seen in the original mapping logic)
-        // If rawData is an object and contains an array named 'doctors'
+ 
         if (rawData && typeof rawData === 'object' && Array.isArray(rawData.doctors)) {
             doctorsArray = rawData.doctors;
-        // If rawData is already the array itself (as suggested by your error message)
         } else if (Array.isArray(rawData)) {
             doctorsArray = rawData;
         } else {

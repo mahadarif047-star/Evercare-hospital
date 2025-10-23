@@ -14,14 +14,15 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Popup form container */
+/* Popup form container (smaller & centered) */
 .doctor-popup {
   background: #fff;
-  padding: 2rem;
-  border-radius: 18px;
-  width: 430px;
-  max-width: 95%;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  padding: 1.8rem 1.5rem;
+  border-radius: 16px;
+  width: 350px; /* ✅ smaller width */
+  max-width: 90%;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+  position: relative;
   animation: slideUp 0.35s ease-in-out;
 }
 
@@ -29,7 +30,7 @@
 .doctor-heading {
   text-align: center;
   color: #2c3e50;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
@@ -38,16 +39,16 @@
 .doctor-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .doctor-input,
 .doctor-select {
   width: 100%;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border: 1.5px solid #ccc;
   border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   outline: none;
   transition: all 0.2s ease;
 }
@@ -63,28 +64,28 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #333;
 }
 
-/* Availability section */
+/* Availability box (compact) */
 .availability-box {
   background: #f7f9fc;
-  padding: 1rem;
+  padding: 0.8rem;
   border-radius: 10px;
   border: 1px solid #e1e5ee;
 }
 
 .availability-box h4 {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
   color: #2c3e50;
 }
 
 .time-inputs {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* Submit button */
@@ -92,8 +93,8 @@
   background: linear-gradient(135deg, #4b7bec, #3867d6);
   color: #fff;
   border: none;
-  padding: 10px;
-  font-size: 1rem;
+  padding: 8px;
+  font-size: 0.95rem;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -109,7 +110,8 @@
 p {
   text-align: center;
   color: #2c3e50;
-  margin-top: 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
 }
 
 /* Animations */
@@ -126,7 +128,7 @@ p {
 
 @keyframes slideUp {
   from {
-    transform: translateY(80px);
+    transform: translateY(60px);
     opacity: 0;
   }
   to {
