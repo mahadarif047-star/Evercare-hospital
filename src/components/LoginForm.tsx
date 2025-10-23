@@ -59,6 +59,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onClose, role, onLoginSuccess }) 
             token: result.token, 
         };
 
+        // 🔑 CRUCIAL FIX: Save the token to Local Storage
+        if (userData.token) {
+            localStorage.setItem("token", userData.token);
+            console.log("Token saved to Local Storage.");
+        }
+
         console.log("Login Success:", userData);
         onLoginSuccess(userData);
         onClose(); 

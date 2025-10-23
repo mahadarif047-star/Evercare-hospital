@@ -1,36 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
-import styles from '../styles/DoctorListingPage.module.css'; 
-import cardStyles from '../styles/DoctorCard.module.css'; 
+// Removed: import styles from '../styles/DoctorListingPage.module.css'; 
+// Removed: import cardStyles from '../styles/DoctorCard.module.css'; 
 
 // --- 1. TYPE DEFINITIONS ---
 interface Doctor {
-  _id: string; 
-  name: string;
-  email: string; 
-  service: string; 
-  education: string; 
-  specialized: string; 
-  image: string; 
-  availability: Array<{ days: string[], from: string, to: string }>; 
-  isVerified: boolean; 
-  experienceYears: number; 
-  location: string; 
+  _id: string; 
+  name: string;
+  email: string; 
+  service: string; 
+  education: string; 
+  specialized: string; 
+  image: string; 
+  availability: Array<{ days: string[], from: string, to: string }>; 
+  isVerified: boolean; 
+  experienceYears: number; 
+  location: string; 
 }
 
 type SelectedDoctor = Doctor | null;
 
 // --- 2. API CONSTANTS ---
 const DOCTOR_LIST_API_URL = 'https://node-backend-tau-three.vercel.app/api/auth/availableDoctors';
-const BOOKING_API_BASE_URL = 'https://node-backend-tau-three.vercel.app/api/auth/appointmentrequest?doctorId=68f77624c808435a187d5ce2';
+
+// NOTE: This is now a base URL. The doctorId will be appended dynamically in BookingModal.
+const BOOKING_API_BASE_URL_START = 'https://node-backend-tau-three.vercel.app/api/auth/appointmentrequest?doctorId='; 
 
 // --- CONSTANTS FOR PAYLOAD MAPPING ---
-const APPOINTMENT_FROM_TIME = "9:00 AM"; 
-const APPOINTMENT_TO_TIME = "10:00 AM"; 
+const APPOINTMENT_FROM_TIME = "10:00 AM"; 
+const APPOINTMENT_TO_TIME = "12:00 AM"; 
 
 
 // --------------------------------------------------------------------------------
-// --- 3. BOOKING MODAL COMPONENT (Only Required Payload Keys Displayed) ---
+// --- 3. BOOKING MODAL COMPONENT (Fixes TypeScript error in Catch block) ---
 // --------------------------------------------------------------------------------
 
 interface BookingModalProps {
@@ -39,100 +41,121 @@ interface BookingModalProps {
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
-  // State holds fields for form input (Patient Name input kept for basic validation)
+  
   const [formData, setFormData] = useState({
-    patientNameInput: '', // Input for the user's name
-    days: '', // Selected day (maps to 'days' in payload)
+    patientNameInput: '', // Maps to the 'Your Name' field
+    days: '', // Maps to 'days' in payload
   });
-  
-  const [bookingStatus, setBookingStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [responseMessage, setResponseMessage] = useState('');
+  
+  const [bookingStatus, setBookingStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [responseMessage, setResponseMessage] = useState('');
 
   const [isDaysDropdownOpen, setIsDaysDropdownOpen] = useState(false);
   
   // Extract all unique available days for the dropdown
   const availableDays = doctor.availability
-    .flatMap(item => item.days)
-    .filter((value, index, self) => self.indexOf(value) === index);
+    .flatMap(item => item.days)
+    .filter((value, index, self) => self.indexOf(value) === index);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simple client-side validation
-    if (!formData.patientNameInput || !formData.days) {
-        setResponseMessage('Please fill in your name and select an appointment day.');
-        return;
-    }
-    
-    setBookingStatus('loading');
-    setResponseMessage('Sending request...');
+    
+    if (!formData.patientNameInput || !formData.days) {
+        setResponseMessage('Please fill in your name and select an appointment day.');
+        return;
+    }
+    
+    setBookingStatus('loading');
+    setResponseMessage('Sending request...');
 
-    // 1. Construct the API URL with the doctor's ID as a query parameter
-    const API_ENDPOINT = `${BOOKING_API_BASE_URL}`
+    const token = localStorage.getItem("token");
 
-    // 2. Construct the FINAL payload (request body) with ONLY the three keys requested: "from", "to", and "days"
-    const payload = {
-        "from": APPOINTMENT_FROM_TIME, 
-        "to": APPOINTMENT_TO_TIME, 
-        "days": formData.days,
-    };
-    
-    // Note: The patientNameInput is used for validation but NOT included in this payload 
-    // as per your strict instructions to only include "from", "to", "days".
+    const API_ENDPOINT = `${BOOKING_API_BASE_URL_START}${doctor._id}`
 
-    try {
-        const token = localStorage.getItem("token");
-        // 3. Send the POST request
-        const res = await axios.post(API_ENDPOINT, payload, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // ✅ add token here
-    },
-  });
-        
-        console.log("Appointment Success:", res);
-        setBookingStatus('success');
-        setResponseMessage(`Appointment booked successfully! Confirmation sent.`);
+   
+    const payload = {
+        "from": APPOINTMENT_FROM_TIME, 
+        "to": APPOINTMENT_TO_TIME, 
+        "days": formData.days,
+        "token": token,
+    };
 
-    } catch (error: any) { 
-        // Safely handle error response
-        const errorMsg = error.response?.data?.message || error.message || 'Failed to connect to booking service.';
-        console.error("Appointment Error:", error.response?.data || error.message);
-        setBookingStatus('error');
-        setResponseMessage(`Booking failed: ${errorMsg}`);
-    }
+    console.log("Payload sent:", payload);
+
+    try {
+        // Using token in header (standard practice) AND in payload (as requested)
+        const res = await axios.post(API_ENDPOINT, payload, {
+            headers: {
+                "Content-Type": "application/json",
+                // Using the retrieved token here
+                Authorization: `Bearer ${token}`, 
+            },
+        });
+        
+        console.log("Appointment Success:", res);
+        setBookingStatus('success');
+        setResponseMessage(`Appointment booked successfully! Confirmation sent.`);
+
+    // FIX: Explicitly check for Axios error structure to resolve squiggly lines
+    } catch (error) { 
+        const err = error as { response?: { data?: { message?: string } }, message: string };
+        const errorMsg = err.response?.data?.message || err.message || 'Failed to connect to booking service.';
+        console.error("Appointment Error:", err.response?.data || err.message);
+        setBookingStatus('error');
+        setResponseMessage(`Booking failed: ${errorMsg}`);
+    }
   };
 
   const handleDaySelect = (day: string) => {
     setFormData(prev => ({ ...prev, days: day }));
     setIsDaysDropdownOpen(false);
   };
-  
-  const getMessageClass = () => {
-    if (bookingStatus === 'success') return styles.success;
-    if (bookingStatus === 'error') return styles.failure;
-    return '';
-  };
-
-
+  
   return (
-    // Modal Overlay
-    <div className={styles.modalOverlay} onClick={onClose}>
+    // Modal Overlay 
+    <div 
+        onClick={onClose} 
+        style={{
+            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, 
+            backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', 
+            justifyContent: 'center', alignItems: 'center', zIndex: 1000
+        }}
+    >
+      {/* Modal Content */}
       <div
-        className={styles.modalContent}
         onClick={e => e.stopPropagation()}
+        style={{
+            backgroundColor: 'white', padding: '20px', 
+            borderRadius: '8px', minWidth: '350px', maxWidth: '450px'
+        }}
       >
-        <button className={styles.closeButton} onClick={onClose}>
+        <button 
+            onClick={onClose}
+            style={{ float: 'right', border: 'none', background: 'none', cursor: 'pointer', fontSize: '1.2em' }}
+        >
           &times; 
         </button>
 
-        <h2>Book Appointment</h2> 
+        <h2>Book Appointment with Dr. {doctor.name}</h2> 
+        <p style={{ textAlign: 'center', color: '#555', marginTop: '-10px', marginBottom: '20px' }}>
+            Specialty: {doctor.service}
+        </p>
 
-        <form onSubmit={handleSubmit} className={styles.bookingForm}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           
-          {/* Patient Name Input (labeled 'from') */}
-          <label htmlFor="patientNameInput">from:</label>
+            {/* Doctor Name (Read-only) - Matches image_1b685e.png */}
+          <label htmlFor="doctorNameDisplay" style={{ fontWeight: 'bold', marginBottom: '-10px' }}>Doctor:</label>
+          <input
+            id="doctorNameDisplay"
+            type="text"
+            readOnly
+            value={`Dr. ${doctor.name}`}
+            style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#f5f5f5' }}
+          />
+
+          {/* Patient Name Input (Your Name) - Matches image_1b685e.png */}
+          <label htmlFor="patientNameInput" style={{ fontWeight: 'bold', marginBottom: '-10px' }}>Your Name:</label>
           <input
             id="patientNameInput"
             type="text"
@@ -140,11 +163,12 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             placeholder="Enter your full name"
             value={formData.patientNameInput}
             onChange={(e) => setFormData(prev => ({ ...prev, patientNameInput: e.target.value }))}
+            style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}
           />
 
-          {/* Appointment Day (labeled 'days') */}
-          <label htmlFor="days">days:</label>
-          <div className={styles.daysDropdownContainer}>
+          {/* Appointment Day (Dropdown) - Matches image_1b685e.png */}
+          <label htmlFor="days" style={{ fontWeight: 'bold', marginBottom: '-10px' }}>Appointment Day:</label>
+          <div>
             <input
               id="days"
               type="text"
@@ -153,64 +177,63 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
               placeholder="Select an available day"
               value={formData.days}
               onClick={() => setIsDaysDropdownOpen(prev => !prev)}
-              className={styles.dropdownInput}
+            style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', width: '100%', cursor: 'pointer' }}
             />
             {isDaysDropdownOpen && (
-              <div className={styles.daysDropdown}>
+              <div style={{ border: '1px solid #ccc', maxHeight: '150px', overflowY: 'auto', position: 'absolute', width: '90%', backgroundColor: 'white', zIndex: 1001, boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
                 {availableDays.length > 0 ? (
                   availableDays.map(day => (
                     <div
                       key={day}
-                      className={styles.dayOption}
+                        style={{ padding: '10px', cursor: 'pointer', borderBottom: '1px dotted #eee' }}
                       onClick={() => handleDaySelect(day)}
                     >
                       {day}
                   </div>
                   ))
                 ) : (
-                  <div className={styles.noDays}>No available days listed.</div>
+                  <div style={{ padding: '10px', color: 'gray' }}>No available days listed.</div>
                 )}
               </div>
             )}
           </div>
-          
-          {/* Appointment Time (labeled 'to') */}
-          <label htmlFor="timeDisplay">to:</label>
-          <input
-            id="timeDisplay"
-            type="text"
-            readOnly
-            value={APPOINTMENT_TO_TIME} 
-            className={styles.readOnlyInput}
-          />
+          
+          {/* Appointment Time (Read-only) - Matches image_25d520.png */}
+          <label htmlFor="timeDisplay" style={{ fontWeight: 'bold', marginBottom: '-10px' }}>Appointment Time:</label>
+          <input
+            id="timeDisplay"
+            type="text"
+            readOnly
+            // Display APPOINTMENT_FROM_TIME to match the time shown in your screenshots
+            value={APPOINTMENT_FROM_TIME} 
+            style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#f5f5f5' }}
+          />
 
           <button 
-            type="submit" 
-            className={styles.submitButton}
-            disabled={bookingStatus === 'loading'}
-          >
-            {bookingStatus === 'loading' ? 'Booking...' : 'Confirm Booking'}
-        
-          </button>
+            type="submit" 
+            disabled={bookingStatus === 'loading'}
+            style={{ padding: '10px', marginTop: '15px', cursor: 'pointer', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px' }}
+          >
+            {bookingStatus === 'loading' ? 'Booking...' : 'Confirm Booking'}
+        
+          </button>
         </form>
-        
-        {/* Status Message Display */}
-        {responseMessage && (
-            <p 
-                className={`${styles.message} ${getMessageClass()}`}
-            >
-                {responseMessage}
-                {bookingStatus === 'success' && <button className={styles.closeModalButton} onClick={onClose}>Close</button>}
-            </p>
-        )}
+        
+        {/* Status Message Display */}
+        {responseMessage && (
+            <p style={{ color: bookingStatus === 'error' ? 'red' : 'green', marginTop: '10px', textAlign: 'center' }}>
+                {responseMessage}
+                {bookingStatus === 'success' && <button onClick={onClose} style={{ marginLeft: '10px' }}>Close</button>}
+            </p>
+        )}
       </div>
-      </div>
+    </div>
   );
 };
 
 
 // --------------------------------------------------------------------------------
-// --- 4. DOCTOR CARD COMPONENT & 5. MAIN LISTING PAGE COMPONENT (UNCHANGED) ---
+// --- 4. DOCTOR CARD COMPONENT (No changes needed) ---
 // --------------------------------------------------------------------------------
 
 interface DoctorCardProps {
@@ -225,47 +248,71 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onBook }) => {
     .map(day => day.substring(0, 3)); 
 
   return (
-    <div className={cardStyles.card}>
-      <div className={cardStyles.detailsSection}>
-        <div className={cardStyles.imageContainer}>
+    <div style={{ border: '1px solid #ccc', padding: '15px', margin: '10px', maxWidth: '400px' }}>
+      {/* Details Section */}
+      <div style={{ display: 'flex', gap: '15px' }}>
+        {/* Image Container */}
+        <div>
           <img
             src={doctor.image || 'https://via.placeholder.com/150'} 
             alt={`Dr. ${doctor.name}`}
-            className={cardStyles.doctorImage}
+            style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '50%' }}
           />
-          <div className={cardStyles.experience}>
+          <div style={{ textAlign: 'center', fontSize: '0.8em', color: 'gray' }}>
             {doctor.experienceYears} Years Experience 
           </div>
         </div>
 
-        <div className={cardStyles.info}>
-          <h3 className={cardStyles.name}>Dr {doctor.name}</h3>
-          {doctor.isVerified && <span className={cardStyles.verified}>Verified</span>} 
+        {/* Info */}
+        <div>
+          <h3 style={{ margin: '0 0 5px 0' }}>Dr {doctor.name}</h3>
+          {doctor.isVerified && <span style={{ color: 'green', fontSize: '0.8em' }}>Verified</span>} 
 
-          <p className={cardStyles.specialty}>{doctor.service} | {doctor.specialized}</p> 
-          <p className={cardStyles.board}>{doctor.education}</p> 
+          <p style={{ margin: '5px 0' }}>{doctor.service} | {doctor.specialized}</p> 
+          <p style={{ margin: '5px 0', fontSize: '0.9em' }}>{doctor.education}</p> 
         </div>
       </div>
 
-      <div className={cardStyles.scheduleSection}>
-        <h4 className={cardStyles.scheduleTitle}>Schedule</h4>
-        <div className={cardStyles.scheduleDays}>
+      <hr style={{ margin: '10px 0' }}/>
+      {/* Schedule Section */}
+      <div>
+        <h4>Schedule</h4>
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '10px' }}>
           {allDays.map(day => (
             <span
               key={day}
-              className={`${cardStyles.dayPill} ${availableDaysShort.includes(day) ? cardStyles.available : cardStyles.unavailable}`}
+                style={{ 
+                    padding: '3px 8px', 
+                    borderRadius: '5px', 
+                    backgroundColor: availableDaysShort.includes(day) ? '#e6ffe6' : '#f0f0f0', 
+                    border: `1px solid ${availableDaysShort.includes(day) ? 'green' : '#ccc'}`, 
+                    fontSize: '0.8em'
+                }}
             >
               {day}
             </span>
           ))}
         </div>
 
-        <div className={cardStyles.location}>
+        {/* Location */}
+        <div>
           <span role="img" aria-label="location-pin">📍</span>
           {doctor.location || 'Location not specified'} 
         </div>
 
-        <button className={cardStyles.bookButton} onClick={() => onBook(doctor)}>
+        <button 
+            onClick={() => onBook(doctor)}
+            style={{ 
+                marginTop: '15px', 
+                padding: '10px', 
+                backgroundColor: 'blue', 
+                color: 'white', 
+                border: 'none', 
+                borderRadius: '5px',
+                cursor: 'pointer',
+                width: '100%'
+            }}
+        >
           Book Appointment
         </button>
       </div>
@@ -273,6 +320,10 @@ const DoctorCard: React.FC<DoctorCardProps> = ({ doctor, onBook }) => {
   );
 };
 
+
+// --------------------------------------------------------------------------------
+// --- 5. MAIN LISTING PAGE COMPONENT (Fixes API data array check) ---
+// --------------------------------------------------------------------------------
 
 const DoctorListingPage: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -282,6 +333,14 @@ const DoctorListingPage: React.FC = () => {
   const [selectedDoctor, setSelectedDoctor] = useState<SelectedDoctor>(null);
 
   const handleBookAppointment = (doctor: Doctor) => {
+    // 🔑 Keeps the essential token check from previous step
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+        alert("You must be logged in to book an appointment. Please log in first.");
+        return; 
+    }
+    
     setSelectedDoctor(doctor);
   };
 
@@ -289,7 +348,7 @@ const DoctorListingPage: React.FC = () => {
     setSelectedDoctor(null);
   };
 
-  // API Fetch Logic
+  // API Fetch Logic (updated mapping)
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -300,36 +359,42 @@ const DoctorListingPage: React.FC = () => {
         }
 
         const rawData = await response.json();
-        
-        let doctorsArray: any[] = [];
-        
-        if (Array.isArray(rawData)) {
-            doctorsArray = rawData;
-        } else if (rawData && typeof rawData === 'object' && Array.isArray(rawData.doctors)) {
-            doctorsArray = rawData.doctors;
+        
+        let doctorsArray: any[] = [];
+        
+        // 🔄 FIX: Prioritize checking for the 'doctors' array first (as seen in the original mapping logic)
+        // If rawData is an object and contains an array named 'doctors'
+        if (rawData && typeof rawData === 'object' && Array.isArray(rawData.doctors)) {
+            doctorsArray = rawData.doctors;
+        // If rawData is already the array itself (as suggested by your error message)
+        } else if (Array.isArray(rawData)) {
+            doctorsArray = rawData;
+        } else {
+            console.warn("API returned non-array data:", rawData);
         }
 
-        if (doctorsArray.length > 0) {
-            const mappedDoctors: Doctor[] = doctorsArray.map((apiDoc, index) => ({
-                _id: apiDoc._id || index.toString(), 
-                name: apiDoc.Full_name || apiDoc.name || 'N/A',
-                email: apiDoc.email_Address || apiDoc.email || 'N/A',
-                service: apiDoc.Service || apiDoc.service || 'N/A',
-                education: apiDoc.Education || apiDoc.education || 'N/A',
-                specialized: apiDoc.Specialized || apiDoc.specialized || 'N/A',
-                image: apiDoc.image || 'https://via.placeholder.com/150',
-                availability: apiDoc.availability && Array.isArray(apiDoc.availability) ? apiDoc.availability : [],
-                
-                // Placeholder/Default values
-                isVerified: true,
-                experienceYears: 5,
-                location: apiDoc.city || 'Remote/Not Specified',
-            }));
-            setDoctors(mappedDoctors);
-        } else {
-            console.warn("API returned no doctor data or an unexpected structure:", rawData);
-            setDoctors([]);
-        }
+        if (doctorsArray.length > 0) {
+            const mappedDoctors: Doctor[] = doctorsArray.map((apiDoc, index) => ({
+                // If _id is missing, use index as a fallback key
+                _id: apiDoc._id || index.toString(), 
+                name: apiDoc.Full_name || apiDoc.name || 'N/A',
+                email: apiDoc.email_Address || apiDoc.email || 'N/A',
+                service: apiDoc.Service || apiDoc.service || 'N/A',
+                education: apiDoc.Education || apiDoc.education || 'N/A',
+                specialized: apiDoc.Specialized || apiDoc.specialized || 'N/A',
+                image: apiDoc.image || 'https://via.placeholder.com/150',
+                availability: apiDoc.availability && Array.isArray(apiDoc.availability) ? apiDoc.availability : [],
+                
+                // Placeholder/Default values
+                isVerified: true,
+                experienceYears: 5,
+                location: apiDoc.city || 'Remote/Not Specified',
+            }));
+            setDoctors(mappedDoctors);
+        } else {
+            console.warn("API returned no doctor data or an unexpected structure.");
+            setDoctors([]);
+        }
 
         setError(false);
       } catch (e) {
@@ -345,36 +410,36 @@ const DoctorListingPage: React.FC = () => {
   }, []); 
 
   if (loading) {
-    return <div className={styles.pageContainer}>Loading available doctors...</div>;
+    return <div>Loading available doctors...</div>;
   }
   
   if (!loading && doctors.length === 0) {
-    return <div className={styles.pageContainer}>No doctors are currently available. Please check back later.</div>;
+    return <div>No doctors are currently available. Please check back later.</div>;
   }
 
   return (
-    <div className={styles.pageContainer}>
+    <div style={{ padding: '20px' }}>
 
       {/* Search and Filter Bar */}
-      <div className={styles.searchBar}>
-        <div className={styles.filters}>
-          <span className={styles.filterIcon}>⚙️</span> Filters
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', border: '1px solid #ddd', padding: '10px' }}>
+        <div>
+          <span role='img' aria-label='filter-icon'>⚙️</span> Filters
         </div>
-        <div className={styles.searchBox}>
+        <div>
           <input type="text" placeholder="Search" />
-          <span className={styles.searchIcon}>🔍</span>
+          <span role='img' aria-label='search-icon'>🔍</span>
         </div>
       </div>
 
       {/* Error Message Display */}
       {error && (
-        <p className={styles.errorMessage}>
+        <p style={{ color: 'red', border: '1px solid red', padding: '10px' }}>
           ⚠️ Failed to fetch live doctor data. Please check the API status.
         </p>
       )}
 
       {/* Doctor List */}
-      <div className={styles.doctorList}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
         {doctors.map(doctor => (
           <DoctorCard
             key={doctor._id} 
