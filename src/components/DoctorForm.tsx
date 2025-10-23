@@ -3,6 +3,20 @@ import { useState } from "react";
 import axios from "axios";
 import "../styles/DoctorForm.module.css"; // keep your CSS import
 
+// --- New: Define the User type that will be passed on successful signup ---
+interface User {
+    id: string;
+    role: 'user' | 'doctor';
+    email: string;
+    token: string;
+}
+
+// --- New: Define the component props (The fix for the previous error) ---
+interface DoctorFormProps {
+    onClose: () => void;
+    onSignUpSuccess: (user: User) => void;
+}
+
 interface Availability {
   days: string[];
   from: string;
@@ -22,7 +36,8 @@ interface FormData {
   image: string;
 }
 
-const DoctorSignup: React.FC = () => {
+// Update the component signature to accept the new props
+const DoctorForm: React.FC<DoctorFormProps> = ({ onClose, onSignUpSuccess }) => {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -81,8 +96,21 @@ const DoctorSignup: React.FC = () => {
         "https://node-backend-tau-three.vercel.app/api/doc/signup",
         formData
       );
+      
       console.log("✅ Signup Success:", res.data);
+      
+      // --- Key Update: Call onSignUpSuccess with the received user data ---
+      const signedUpUser: User = {
+          id: res.data.user.id, // Assuming the API returns a user object
+          role: 'doctor', // Hardcoded as this is the doctor form
+          email: res.data.user.email,
+          token: res.data.token, // Assuming the API returns a token
+      };
+      onSignUpSuccess(signedUpUser);
+      // The parent component (App.tsx) handles closing the form after success.
+      
       setMessage("Signup successful!");
+      
     } catch (err: any) {
       console.error("❌ Signup Error:", err.response?.data || err.message);
       setMessage("Signup failed — check console for details.");
@@ -92,6 +120,10 @@ const DoctorSignup: React.FC = () => {
   return (
     <div className="doctor-overlay">
       <div className="doctor-popup">
+        {/* New: Add a close button that calls the onClose prop */}
+        <button onClick={onClose} className="close-button" style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>
+            &times;
+        </button>
         <h2 className="doctor-heading">Doctor Signup</h2>
 
         <form onSubmit={handleSubmit} className="doctor-form">
@@ -218,4 +250,5 @@ const DoctorSignup: React.FC = () => {
   );
 };
 
-export default DoctorSignup;
+// Rename the export to DoctorForm to match the import name in App.tsx
+export default DoctorForm;

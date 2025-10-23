@@ -13,10 +13,10 @@ import './styles/App.css';
 
 // --- TYPES (Centralized in App.tsx) ---
 interface User {
-  id: string;
-  role: 'user' | 'doctor';
-  email: string;
-  token: string;
+  id: string;
+  role: 'user' | 'doctor';
+  email: string;
+  token: string;
 }
 
 type SignUpRole = 'none' | 'user' | 'doctor';
@@ -26,105 +26,106 @@ type Page = 'home' | 'doctors' | 'appointment';
 // ------------------------------------------
 
 const App: React.FC = () => {
-  const [selectedRole, setSelectedRole] = useState<SignUpRole>('none'); 
-  const [showLogin, setShowLogin] = useState(false);
-  const [loginRole, setLoginRole] = useState<'user' | 'doctor'>('user'); 
-  const [currentPage, setCurrentPage] = useState<Page>('home');
-  // Central source of truth for logged-in status
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null); 
+  const [selectedRole, setSelectedRole] = useState<SignUpRole>('none'); 
+  const [showLogin, setShowLogin] = useState(false);
+  const [loginRole, setLoginRole] = useState<'user' | 'doctor'>('user'); 
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+  // Central source of truth for logged-in status
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null); 
 
-  // SUCCESS HANDLER for both Login/Sign Up
-  const handleAuthSuccess = (user: User) => {
-      setLoggedInUser(user);
-      handleCloseForm(); 
-      // Redirect to home after successful login/signup
-      handleNavigate('home'); 
-  }
-  
-  // LOGOUT HANDLER
-  const handleLogout = () => {
-      setLoggedInUser(null);
-      handleNavigate('home');
-  }
+  // SUCCESS HANDLER for both Login/Sign Up
+  const handleAuthSuccess = (user: User) => {
+      setLoggedInUser(user);
+      handleCloseForm(); 
+      // Redirect to home after successful login/signup
+      handleNavigate('home'); 
+  }
+  
+  // LOGOUT HANDLER
+  const handleLogout = () => {
+      setLoggedInUser(null);
+      handleNavigate('home');
+  }
 
-  // Handler for form selection
-  const handleRoleSelect = (role: SignUpRole) => {
-    setSelectedRole(role);
-    setShowLogin(false);
-    setCurrentPage('home'); 
-  };
-  
-  // Handler for opening the Login modal (called from Navbar)
-  const handleOpenLoginModal = (role: 'user' | 'doctor') => { 
-      setLoginRole(role); 
-      setShowLogin(true);
-      setSelectedRole('none');
-      setCurrentPage('home');
-  }
+  // Handler for form selection
+  const handleRoleSelect = (role: SignUpRole) => {
+    setSelectedRole(role);
+    setShowLogin(false);
+    setCurrentPage('home'); 
+  };
+  
+  // Handler for opening the Login modal (called from Navbar)
+  const handleOpenLoginModal = (role: 'user' | 'doctor') => { 
+      setLoginRole(role); 
+      setShowLogin(true);
+      setSelectedRole('none');
+      setCurrentPage('home');
+  }
 
-  // Handler for Navbar navigation links
-  const handleNavigate = (page: Page) => {
-      setCurrentPage(page);
-      setSelectedRole('none');
-      setShowLogin(false);
-  }
+  // Handler for Navbar navigation links
+  const handleNavigate = (page: Page) => {
+      setCurrentPage(page);
+      setSelectedRole('none');
+      setShowLogin(false);
+  }
 
-  // Handler to close any active form/modal
-  const handleCloseForm = () => {
-    setSelectedRole('none');
-    setShowLogin(false);
-  };
-  
-  const renderContent = () => {
-    // Priority 2: Page Routing
-    if (currentPage === 'doctors') return <DoctorListingPage />;
-    
-    // Renders the new AppointmentPage component
-    if (currentPage === 'appointment') {
-        return <AppointmentPage />; 
-    }
-    
-    return <HeroSection />; 
-  };
+  // Handler to close any active form/modal
+  const handleCloseForm = () => {
+    setSelectedRole('none');
+    setShowLogin(false);
+  };
+  
+  const renderContent = () => {
+    // Priority 2: Page Routing
+    if (currentPage === 'doctors') return <DoctorListingPage />;
+    
+    // Renders the new AppointmentPage component
+    if (currentPage === 'appointment') {
+        return <AppointmentPage />; 
+    }
+    
+    return <HeroSection />; 
+  };
 
-  return (
-    <div className="app-container">
-      <Navbar 
-          onRoleSelect={handleRoleSelect} 
-          onLoginRoleSelected={handleOpenLoginModal}
-          onNavigate={handleNavigate}
-          loggedInRole={loggedInUser?.role || 'unauthenticated'} // PASS ROLE
-          onLogout={handleLogout} // PASS LOGOUT HANDLER
-      /> 
-      
-      <main style={{ flexGrow: 1 }}>
-        {renderContent()}
-        
-        {/* Render Forms conditionally (as overlays) */}
-        {showLogin && (
-            <LoginForm 
-                onClose={handleCloseForm} 
-                role={loginRole} 
-                onLoginSuccess={handleAuthSuccess} // Pass success handler
-            />
-        )}
-        {selectedRole === 'user' && (
-            <UserForm 
-                onClose={handleCloseForm} 
-                onSignUpSuccess={handleAuthSuccess} // Pass success handler
-            />
-        )}
-        {selectedRole === 'doctor' && (
-            <DoctorForm 
-                onClose={handleCloseForm} 
-                onSignUpSuccess={handleAuthSuccess} // Pass success handler
-            />
-        )}
-      </main>
+  return (
+    <div className="app-container">
+      <Navbar 
+          onRoleSelect={handleRoleSelect} 
+          onLoginRoleSelected={handleOpenLoginModal}
+          onNavigate={handleNavigate}
+          loggedInRole={loggedInUser?.role || 'unauthenticated'} // PASS ROLE
+          onLogout={handleLogout} // PASS LOGOUT HANDLER
+      /> 
+      
+      <main style={{ flexGrow: 1 }}>
+        {renderContent()}
+        
+        {/* Render Forms conditionally (as overlays) */}
+        {showLogin && (
+            <LoginForm 
+                onClose={handleCloseForm} 
+                role={loginRole} 
+                onLoginSuccess={handleAuthSuccess} // Pass success handler
+            />
+        )}
+        {selectedRole === 'user' && (
+            <UserForm 
+                onClose={handleCloseForm} 
+                onSignUpSuccess={handleAuthSuccess} // Pass success handler
+            />
+        )}
+        {selectedRole === 'doctor' && (
+            // The error is resolved by the updated DoctorForm component definition
+            <DoctorForm 
+                onClose={handleCloseForm} 
+                onSignUpSuccess={handleAuthSuccess} // Pass success handler
+            />
+        )}
+      </main>
 
-      <Footer /> 
-    </div>
-  );
+      <Footer /> 
+    </div>
+  );
 };
 
 export default App;
