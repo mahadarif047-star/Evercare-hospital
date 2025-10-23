@@ -204,7 +204,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose }) => {
             id="timeDisplay"
             type="text"
             readOnly
-            // Display APPOINTMENT_FROM_TIME to match the time shown in your screenshots
             value={APPOINTMENT_FROM_TIME} 
             style={{ padding: '10px', border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#f5f5f5' }}
           />
