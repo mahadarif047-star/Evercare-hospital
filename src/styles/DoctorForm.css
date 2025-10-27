@@ -1,4 +1,3 @@
-/* Fullscreen dark overlay */
 .doctor-overlay {
   position: fixed;
   top: 0;
@@ -14,19 +13,17 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Popup form container (smaller & centered) */
 .doctor-popup {
   background: #fff;
   padding: 1.8rem 1.5rem;
   border-radius: 16px;
-  width: 350px; /* ✅ smaller width */
+  width: 350px;
   max-width: 90%;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
   position: relative;
   animation: slideUp 0.35s ease-in-out;
 }
 
-/* Heading */
 .doctor-heading {
   text-align: center;
   color: #2c3e50;
@@ -35,7 +32,6 @@
   margin-bottom: 1rem;
 }
 
-/* Form fields */
 .doctor-form {
   display: flex;
   flex-direction: column;
@@ -59,7 +55,6 @@
   box-shadow: 0 0 5px rgba(75, 123, 236, 0.3);
 }
 
-/* Label and checkbox */
 .doctor-label {
   display: flex;
   align-items: center;
@@ -68,7 +63,6 @@
   color: #333;
 }
 
-/* Availability box (compact) */
 .availability-box {
   background: #f7f9fc;
   padding: 0.8rem;
@@ -88,7 +82,6 @@
   gap: 8px;
 }
 
-/* Submit button */
 .doctor-button {
   background: linear-gradient(135deg, #4b7bec, #3867d6);
   color: #fff;
@@ -106,7 +99,6 @@
   box-shadow: 0 4px 10px rgba(56, 103, 214, 0.3);
 }
 
-/* Message */
 p {
   text-align: center;
   color: #2c3e50;
@@ -114,7 +106,6 @@ p {
   font-size: 0.9rem;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;

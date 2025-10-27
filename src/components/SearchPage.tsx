@@ -78,7 +78,6 @@ const SearchPage: React.FC = () => {
     <div style={{ padding: "2rem", textAlign: "center" }}>
       <h1 style={{ color: "#2c3e50", marginBottom: "1rem" }}>Search Doctors</h1>
 
-      {/* Search bar */}
       <input
         type="text"
         placeholder="Search by doctor name..."
@@ -96,8 +95,7 @@ const SearchPage: React.FC = () => {
         }}
       />
 
-      {/* Results */}
-      {doctorsToShow.length > 0 ? (
+     {doctorsToShow.length > 0 ? (
         <div
           style={{
             display: "flex",

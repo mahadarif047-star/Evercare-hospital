@@ -9,11 +9,10 @@ interface Appointment {
   status: string; 
 }
 
-
 const APPOINTMENT_VIEW_API_URL =
   "https://node-backend-tau-three.vercel.app/api/doc/viewappointments?doctorId=68f77624c808435a187d5ce2";
 const APPOINTMENT_CONFIRM_API_BASE =
-  "https://node-backend-tau-three.vercel.app/api/doc/confirmappointment";
+  "https://node-backend-tau-three.vercel.app/api/doc/confirmappointment?appointment_id=68f777fe90d43baf337efe26";
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
@@ -137,9 +136,9 @@ const AppointmentPage: React.FC = () => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Authentication token not found. Please log in as a doctor.");
 
-        const response = await fetch(`${APPOINTMENT_VIEW_API_URL}?{}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+         const response = await fetch(APPOINTMENT_VIEW_API_URL.trim(), {
+           headers: { Authorization: `Bearer ${token}` },
+              });
 
         if (!response.ok) {
           const error = await response.json().catch(() => ({ message: "Server error" }));

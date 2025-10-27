@@ -3,7 +3,7 @@
   color: var(--white);
   overflow: hidden;
   padding-top: 50px;
-  position: relative; /* Added for image positioning */
+  position: relative;
 }
 
 .contentContainer {
@@ -13,9 +13,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 120px; /* More space for the image to overlap */
+  padding-bottom: 120px;
   position: relative;
-  z-index: 1; /* Ensure content is above any background elements */
+  z-index: 1;
 }
 
 .textContent {
@@ -25,7 +25,7 @@
 }
 
 .mainHeading {
-  font-size: 3.5rem; /* Large and impactful */
+  font-size: 3.5rem;
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 20px;
@@ -34,31 +34,31 @@
 .subText {
   margin-top: 20px;
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.85); /* Slightly brighter text */
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.6;
 }
 
 .buttonGroup {
   display: flex;
   gap: 15px;
-  margin-top: 40px; /* More spacing */
+  margin-top: 40px;
 }
 
 .appointmentButton {
-  padding: 14px 28px; /* Slightly larger buttons */
+  padding: 14px 28px;
   background-color: var(--white);
   color: var(--primary-blue);
   font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* More pronounced shadow */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .appointmentButton:hover {
   background-color: #f0f0f0;
-  transform: translateY(-2px); /* Subtle hover effect */
+  transform: translateY(-2px);
 }
 
 .callButton {
@@ -78,31 +78,30 @@
   transform: translateY(-2px);
 }
 
-.imageWrapper { /* New wrapper for controlling image placement */
-  position: absolute; /* Position relative to .heroSection */
+.imageWrapper {
+  position: absolute;
   bottom: 0;
   right: 0;
-  width: 55%; /* Adjust width to fit the design */
-  max-width: 700px; /* Prevent image from becoming too large */
+  width: 55%;
+  max-width: 700px;
   height: auto;
   display: flex;
   justify-content: flex-end;
-  align-items: flex-end; /* Align image to the bottom */
-  pointer-events: none; /* Allows clicks to pass through to content behind it */
+  align-items: flex-end;
+  pointer-events: none;
 }
 
 .doctorImage {
   width: 100%;
   height: auto;
-  object-fit: contain; /* Ensure the entire image is visible */
+  object-fit: contain;
   position: relative;
-  bottom: -40px; /* Adjust this to control how much it overlaps the bottom */
-  right: -20px; /* Adjust to move it slightly out of bounds on the right */
+  bottom: -40px;
+  right: -20px;
   border-radius: 10px 10px 0 0;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .mainHeading { font-size: 3rem; }
   .doctorImage { max-width: 450px; bottom: -20px; }
@@ -123,9 +122,9 @@
   .mainHeading { font-size: 2.5rem; }
   .buttonGroup { justify-content: center; }
   .imageWrapper {
-    position: static; /* Remove absolute positioning on small screens */
+    position: static;
     width: 100%;
-    max-width: 400px; /* Constrain image size */
+    max-width: 400px;
     margin: 0 auto;
     bottom: 0;
     right: 0;

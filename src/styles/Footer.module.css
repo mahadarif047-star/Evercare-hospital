@@ -1,18 +1,18 @@
-.footer {
+ .footer {
   background-color: var(--bg-dark);
   color: var(--text-gray);
   margin-top: auto;
-  padding-top: 60px; /* More padding */
+  padding-top: 60px;
 }
 
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px 40px; /* Adjust padding */
+  padding: 0 20px 40px;
   display: grid;
-  grid-template-columns: 1.5fr repeat(3, 1fr); /* First column wider */
+  grid-template-columns: 1.5fr repeat(3, 1fr);
   gap: 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle separator */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footerColumn {
@@ -20,7 +20,7 @@
 }
 
 .logo {
-  font-size: 2rem; /* Larger logo */
+  font-size: 2rem;
   font-weight: bold;
   margin-bottom: 15px;
   color: var(--white);
@@ -46,7 +46,7 @@
 .socialLink {
   color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
-  font-size: 1.3rem; /* Larger icons */
+  font-size: 1.3rem;
   transition: color 0.3s ease;
 }
 
@@ -54,25 +54,24 @@
   color: var(--primary-blue);
 }
 
-/* Icons within social links and contact info */
 .socialLink i, .contactInfo i {
   margin-right: 8px;
 }
 
 .heading {
-  font-size: 1.2rem; /* Larger heading */
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--white);
   margin-bottom: 20px;
   position: relative;
 }
 
-.heading::after { /* Underline effect */
+.heading::after {
   content: '';
   position: absolute;
   left: 0;
   bottom: -5px;
-  width: 50px; /* Short underline */
+  width: 50px;
   height: 2px;
   background-color: var(--primary-blue);
 }
@@ -101,7 +100,7 @@
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.7);
   display: flex;
-  align-items: flex-start; /* Align icon and text nicely */
+  align-items: flex-start;
 }
 
 .bottomBar {
@@ -116,7 +115,6 @@
   margin: 0 auto;
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .container {
     grid-template-columns: 1.2fr repeat(3, 1fr);
@@ -127,19 +125,20 @@
 
 @media (max-width: 768px) {
   .container {
-    grid-template-columns: 1fr 1fr; /* Two columns */
+    grid-template-columns: 1fr 1fr;
     gap: 30px;
   }
-  .footerColumn:nth-child(1) { /* Full width for logo on small screens */
+  .footerColumn:nth-child(1) {
     grid-column: 1 / -1;
     text-align: center;
   }
-  .heading::after { left: 50%; transform: translateX(-50%); } /* Center underline */
+  .heading::after { left: 50%; transform: translateX(-50%); }
   .socialIcons { justify-content: center; }
 }
+
 @media (max-width: 480px) {
   .container {
-    grid-template-columns: 1fr; /* Single column */
+    grid-template-columns: 1fr;
     gap: 20px;
     text-align: center;
   }

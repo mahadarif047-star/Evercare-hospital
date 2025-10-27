@@ -1,27 +1,26 @@
 .formOverlay {
-  position: fixed; /* Fixed position to cover the entire viewport */
+  position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* High z-index to appear above everything else */
-  backdrop-filter: blur(5px); /* Optional: Adds a blur effect */
+  z-index: 1000;
+  backdrop-filter: blur(5px);
 }
 
 .formCard {
   padding: 30px;
   background-color: var(--white);
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
   max-width: 600px;
-  width: 90%; /* Make it responsive */
-  position: relative; /* Needed for positioning the close button */
-  transform: translateY(0); /* Start animation from here */
+  width: 90%;
+  position: relative;
+  transform: translateY(0);
   animation: slideDown 0.3s ease-out forwards;
 }
 
-/* Keyframe animation for slide down effect */
 @keyframes slideDown {
   from { transform: translateY(-50px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
@@ -33,14 +32,14 @@
   right: 15px;
   background: none;
   border: none;
-  font-size: 2rem; /* Larger cross icon */
+  font-size: 2rem;
   color: #aaa;
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
 .closeButton:hover {
-  color: var(--text-dark); /* Darker on hover */
+  color: var(--text-dark);
 }
 
 .formTitle {
@@ -106,13 +105,12 @@
   background-color: var(--light-blue);
 }
 
-/* Responsive adjustments for forms */
 @media (max-width: 600px) {
   .formGrid {
-    grid-template-columns: 1fr; /* Stack columns on small screens */
+    grid-template-columns: 1fr;
   }
   .formCard {
-    width: 95%; /* Adjust width for very small screens */
+    width: 95%;
     margin: 20px;
   }
 }

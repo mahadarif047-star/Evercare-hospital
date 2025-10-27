@@ -1,62 +1,60 @@
-/* src/styles/DoctorCard.module.css */
-
 .card {
     display: flex;
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    flex-wrap: wrap;
     background-color: var(--white);
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Stronger shadow */
-    padding: 25px 30px; /* Increased padding */
-    gap: 30px; /* Gap between major sections */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    padding: 25px 30px;
+    gap: 30px;
     border: 1px solid #e0e0e0;
-    align-items: flex-start; /* Align content to the top */
+    align-items: flex-start;
 }
 
 .detailsSection {
     display: flex;
-    gap: 25px; /* Gap between image and info */
-    flex: 2; /* Takes a larger portion of space */
+    gap: 25px;
+    flex: 2;
     padding-right: 35px;
     border-right: 1px solid #f0f0f0;
-    min-width: 350px; /* Ensure it doesn't shrink too much */
+    min-width: 350px;
 }
 
 .imageContainer {
     position: relative;
-    flex-shrink: 0; /* Prevent image from shrinking */
-    width: 160px; /* Fixed width */
-    height: 160px; /* Fixed height */
-    border-radius: 8px; /* Consistent with design */
-    overflow: hidden; /* Ensure experience text doesn't flow out */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Shadow for image */
+    flex-shrink: 0;
+    width: 160px;
+    height: 160px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .doctorImage {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block; /* Remove extra space below image */
+    display: block;
 }
 
 .experience {
     position: absolute;
-    bottom: 0; /* Position at the very bottom */
+    bottom: 0;
     left: 0;
     right: 0;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.7); /* Darker overlay for text */
+    background-color: rgba(0, 0, 0, 0.7);
     color: var(--white);
     padding: 5px 0;
-    font-size: 0.8rem; /* Slightly larger font */
+    font-size: 0.8rem;
     font-weight: 500;
 }
 
 .info {
-    flex-grow: 1; /* Allows info to take available space */
+    flex-grow: 1;
 }
 
 .name {
-    font-size: 1.5rem; /* Larger name */
+    font-size: 1.5rem;
     color: var(--text-dark);
     margin: 0 0 8px 0;
     font-weight: 700;
@@ -68,32 +66,31 @@
     background-color: #e5f6e5;
     color: #38a169;
     font-size: 0.8rem;
-    padding: 4px 10px; /* More padding */
-    border-radius: 15px; /* More rounded pill shape */
+    padding: 4px 10px;
+    border-radius: 15px;
     font-weight: 600;
     margin-bottom: 12px;
 }
 
 .specialty, .board {
-    font-size: 0.95rem; /* Slightly larger */
-    color: #444; /* Darker text */
-    margin: 6px 0; /* More spacing */
+    font-size: 0.95rem;
+    color: #444;
+    margin: 6px 0;
     line-height: 1.4;
 }
 
-/* Schedule Section */
 .scheduleSection {
-    flex: 1; /* Takes remaining space */
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-width: 300px; /* Ensure it maintains a minimum width */
+    min-width: 300px;
 }
 
 .scheduleTitle {
-    font-size: 1.2rem; /* Larger title */
+    font-size: 1.2rem;
     margin-top: 0;
-    margin-bottom: 18px; /* More space below title */
+    margin-bottom: 18px;
     color: var(--text-dark);
     font-weight: 700;
 }
@@ -101,21 +98,21 @@
 .scheduleDays {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Increased gap */
-    margin-bottom: 25px; /* More spacing */
+    gap: 10px;
+    margin-bottom: 25px;
 }
 
 .dayPill {
-    padding: 8px 15px; /* Larger pills */
+    padding: 8px 15px;
     border-radius: 20px;
-    font-size: 0.85rem; /* Slightly larger text */
+    font-size: 0.85rem;
     font-weight: 500;
     text-align: center;
     transition: all 0.2s ease-in-out;
 }
 
 .available {
-    background-color: var(--primary-blue); /* Primary blue for available */
+    background-color: var(--primary-blue);
     color: var(--white);
     border: 1px solid var(--primary-blue);
     cursor: pointer;
@@ -127,23 +124,23 @@
 }
 
 .unavailable {
-    background-color: #f0f0f0; /* Lighter grey for unavailable */
+    background-color: #f0f0f0;
     color: #888;
     border: 1px solid #ddd;
     text-decoration: line-through;
 }
 
 .location {
-    font-size: 0.95rem; /* Slightly larger text */
+    font-size: 0.95rem;
     color: #555;
-    margin-bottom: 30px; /* More space before button */
+    margin-bottom: 30px;
     display: flex;
     align-items: center;
-    gap: 8px; /* Space between icon and text */
+    gap: 8px;
 }
 
 .location span {
-    font-size: 1.1rem; /* Adjust emoji size */
+    font-size: 1.1rem;
 }
 
 .bookButton {
@@ -156,8 +153,8 @@
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
-    align-self: flex-end; /* Aligns to the bottom right */
-    width: fit-content; /* Adjust width to content */
+    align-self: flex-end;
+    width: fit-content;
 }
 
 .bookButton:hover {
