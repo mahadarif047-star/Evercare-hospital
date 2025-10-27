@@ -1,6 +1,5 @@
-/* Define primary color variables globally for all modules to inherit */
 :root {
-  --primary-blue: #0047b3; /* The deep blue from your image */
+  --primary-blue: #0047b3; 
   --light-blue: #0056d3;
   --text-dark: #333;
   --text-light: #f4f4f4;
