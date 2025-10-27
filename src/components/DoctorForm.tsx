@@ -1,17 +1,15 @@
 import * as React from "react";
 import { useState } from "react";
 import axios from "axios";
-import "../styles/DoctorForm.css"; // ✅ fixed import (not .module.css)
+import "../styles/DoctorForm.css"; 
 
-// --- Define User type ---
 interface User {
-  id: string;
+  // id: string;
   role: "user" | "doctor";
   email: string;
   token: string;
 }
 
-// --- Define Props ---
 interface DoctorFormProps {
   onClose: () => void;
   onSignUpSuccess: (user: User) => void;
@@ -89,7 +87,7 @@ const DoctorForm: React.FC<DoctorFormProps> = ({ onClose, onSignUpSuccess }) => 
       console.log("✅ Signup Success:", res.data);
 
       const signedUpUser: User = {
-        id: res.data.user.id,
+        // id: res.data.user.id,
         role: "doctor",
         email: res.data.user.email,
         token: res.data.token,

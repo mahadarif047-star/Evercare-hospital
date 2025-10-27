@@ -9,6 +9,7 @@ import LoginForm from './components/LoginForm';
 import DoctorListingPage from './components/DoctorListingPage'; 
 import AppointmentPage from './components/AppointmentPage'; 
 import Footer from './components/Footer';
+import SearchPage from "./components/SearchPage"; // ✅ already imported
 import './styles/App.css';
 
 // --- TYPES (Centralized in App.tsx) ---
@@ -20,7 +21,8 @@ interface User {
 }
 
 type SignUpRole = 'none' | 'user' | 'doctor';
-type Page = 'home' | 'doctors' | 'appointment';
+// ✅ Added "search" page type
+type Page = 'home' | 'doctors' | 'appointment' | 'search';
 
 // All mock authentication functions and constants removed.
 // ------------------------------------------
@@ -76,6 +78,9 @@ const App: React.FC = () => {
   };
   
   const renderContent = () => {
+    // ✅ Added new route for Search Page
+    if (currentPage === 'search') return <SearchPage />;
+
     // Priority 2: Page Routing
     if (currentPage === 'doctors') return <DoctorListingPage />;
     
@@ -115,7 +120,6 @@ const App: React.FC = () => {
             />
         )}
         {selectedRole === 'doctor' && (
-            // The error is resolved by the updated DoctorForm component definition
             <DoctorForm 
                 onClose={handleCloseForm} 
                 onSignUpSuccess={handleAuthSuccess} // Pass success handler

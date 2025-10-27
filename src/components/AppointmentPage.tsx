@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
 
-// -------------------- INTERFACES --------------------
 interface Appointment {
   _id: string;
   doctorId: string;
   patientName: string;
   appointmentDate: string;
   appointmentTime: string;
-  status: string; // e.g. 'Pending', 'Accepted', 'Rejected'
+  status: string; 
 }
 
-// -------------------- API CONFIG --------------------
+
 const APPOINTMENT_VIEW_API_URL =
   "https://node-backend-tau-three.vercel.app/api/doc/viewappointments?doctorId=68f77624c808435a187d5ce2";
 const APPOINTMENT_CONFIRM_API_BASE =
   "https://node-backend-tau-three.vercel.app/api/doc/confirmappointment";
 
-// -------------------- STYLES --------------------
 const styles: Record<string, React.CSSProperties> = {
   container: {
     padding: "40px",
@@ -123,7 +121,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
-// -------------------- COMPONENT --------------------
 const AppointmentPage: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +128,6 @@ const AppointmentPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
-  // -------------------- FETCH APPOINTMENTS --------------------
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -141,7 +137,7 @@ const AppointmentPage: React.FC = () => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Authentication token not found. Please log in as a doctor.");
 
-        const response = await fetch(APPOINTMENT_VIEW_API_URL, {
+        const response = await fetch(`${APPOINTMENT_VIEW_API_URL}?{}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -176,7 +172,6 @@ const AppointmentPage: React.FC = () => {
     fetchAppointments();
   }, []);
 
-  // -------------------- HANDLE ACCEPT / REJECT --------------------
   const handleAppointmentAction = async (appointmentId: string, action: "approved" | "cancelled") => {
     const newStatus = action === "approved" ? "approved" : "cancelled";
     let message = "";
@@ -201,7 +196,6 @@ const AppointmentPage: React.FC = () => {
         throw new Error(result.message || `Failed to ${action} appointment.`);
       }
 
-      // Remove the appointment from the list
       setAppointments((prev) => prev.filter((a) => a._id !== appointmentId));
       message = `Appointment ${newStatus} successfully!`;
     } catch (err: any) {
@@ -218,7 +212,6 @@ const AppointmentPage: React.FC = () => {
     setModalMessage("");
   };
 
-  // -------------------- RENDER --------------------
   if (loading) {
     return <div style={{ textAlign: "center", padding: "100px" }}>Loading appointment details...</div>;
   }

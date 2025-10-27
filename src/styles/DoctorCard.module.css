@@ -150,9 +150,9 @@
     background-color: var(--primary-blue);
     color: var(--white);
     border: none;
-    padding: 14px 30px; /* Larger button */
-    border-radius: 8px; /* More rounded */
-    font-size: 1.05rem; /* Slightly larger font */
+    padding: 14px 30px; 
+    border-radius: 8px;
+    font-size: 1.05rem;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -164,18 +164,17 @@
     background-color: var(--light-blue);
 }
 
-/* Responsive adjustments for the card */
 @media (max-width: 992px) {
     .card {
-        flex-direction: column; /* Stack sections vertically */
+        flex-direction: column; 
         gap: 25px;
     }
     .detailsSection {
-        border-right: none; /* Remove vertical separator */
-        border-bottom: 1px solid #f0f0f0; /* Add horizontal separator */
+        border-right: none; 
+        border-bottom: 1px solid #f0f0f0; 
         padding-bottom: 25px;
         padding-right: 0;
-        flex-direction: column; /* Stack image and info vertically */
+        flex-direction: column; 
         align-items: center;
         text-align: center;
         min-width: unset;
@@ -187,18 +186,18 @@
         text-align: center;
     }
     .verified {
-        margin: 10px auto; /* Center verified pill */
+        margin: 10px auto; 
     }
     .scheduleSection {
         min-width: unset;
-        align-items: center; /* Center schedule content */
+        align-items: center;
         text-align: center;
     }
     .scheduleDays {
-        justify-content: center; /* Center day pills */
+        justify-content: center; 
     }
     .bookButton {
-        align-self: center; /* Center the book button */
+        align-self: center; 
     }
 }
 

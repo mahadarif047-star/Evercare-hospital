@@ -22,9 +22,9 @@ const HeroSection: React.FC = () => {
           </div>
         </div>
 
-        <div className={styles.imageWrapper}> {/* Added a wrapper for better positioning */}
+        <div className={styles.imageWrapper}> 
           <img 
-            src="/doctor.png" // Ensure this image is in your public folder
+            src="/doctor.png" 
             alt="Smiling Doctor"
             className={styles.doctorImage}
           />

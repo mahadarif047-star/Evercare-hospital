@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import styles from '../styles/UserForm.module.css';
 
-// --- TYPES for Props ---
 interface User {
   id: string;
   role: 'user' | 'doctor';
@@ -13,10 +12,8 @@ interface User {
 
 interface UserFormProps {
   onClose: () => void;
-  // Prop expected from App.tsx for state management
   onSignUpSuccess: (user: User) => void;
 }
-// ---------------------------------------------
 
 
 const UserForm: React.FC<UserFormProps> = ({ onClose, onSignUpSuccess }) => {
@@ -41,9 +38,7 @@ const UserForm: React.FC<UserFormProps> = ({ onClose, onSignUpSuccess }) => {
     setLoading(true);
     setApiError(null);
 
-    // Prepare data object with all fields
     const registrationData = {
-      // role: 'user', // Explicitly setting role for the API endpoint
       name,
       email,
       password,
@@ -53,11 +48,9 @@ const UserForm: React.FC<UserFormProps> = ({ onClose, onSignUpSuccess }) => {
       country,
       service, 
       date, // <<< ADDED DATE KEY HERE
-      // Use zip_code to match your desired API key, converting to number
       zip_code: zipCode ? parseInt(zipCode, 10) : undefined, 
     };
     
-    // --- API INTEGRATION ---
     const API_URL = 'https://node-backend-tau-three.vercel.app/api/auth/signup';
 
     try {

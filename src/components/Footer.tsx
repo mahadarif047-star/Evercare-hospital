@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        {/* Section 1: Logo and Motto */}
+
         <div className={styles.footerColumn}>
           <h3 className={styles.logo}>
             Health<span className={styles.logoSpan}>Care</span>
